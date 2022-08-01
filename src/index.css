@@ -19,12 +19,12 @@
           background-color: #fff3f6;
           border-color: #f3e0e0;
           color: #a95a5a;
-          box-shadow: inset 0 1px 3px 0 rgba(146, 62, 62, .05);
+          box-shadow: inset 0 1px 3px 0 rgba(146, 62, 62, 0.05);
         }
       }
     }
 
-    &[contentEditable=true][data-placeholder]::before{
+    &[contentEditable='true'][data-placeholder]::before {
       position: absolute;
       content: attr(data-placeholder);
       color: #707684;
@@ -32,15 +32,14 @@
       opacity: 0;
     }
 
-    &[contentEditable=true][data-placeholder]:empty {
-
+    &[contentEditable='true'][data-placeholder]:empty {
       &::before {
         opacity: 1;
       }
 
       &:focus::before {
-         opacity: 0;
-       }
+        opacity: 0;
+      }
     }
   }
 
@@ -64,14 +63,14 @@
 
   &__content {
     display: block;
-    padding: 25px;
+    padding: 12px;
     border-radius: 2px;
     box-shadow: 0 0 0 2px #fff;
     color: initial !important;
     text-decoration: none !important;
 
     &::after {
-      content: "";
+      content: '';
       clear: both;
       display: table;
     }
@@ -79,26 +78,40 @@
     &--rendered {
       background: #fff;
       border: 1px solid rgba(201, 201, 204, 0.48);
-      box-shadow: 0 1px 3px rgba(0,0,0, .1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       border-radius: 6px;
       will-change: filter;
       animation: link-in 450ms 1 cubic-bezier(0.215, 0.61, 0.355, 1);
 
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+      /* box-shadow: rgb(0 0 0 / 20%) 0px 1px 3px 0px, rgb(0 0 0 / 14%) 0px 1px 1px 0px, rgb(0 0 0 / 12%) 0px 2px 1px -1px; */
+      border-radius: 4px;
+
       &:hover {
-        box-shadow: 0 0 3px rgba(0,0,0, .16);
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.16);
       }
+    }
+
+    &--left {
+      width: 100%;
     }
   }
 
   &__image {
+    flex-grow: 1;
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
-    margin: 0 0 0 30px;
-    width: 65px;
-    height: 65px;
-    border-radius: 3px;
-    float: right;
+    background-size: contain;
+    margin: 0 0 0 12px;
+    width: 50%;
+    height: 90px;
+    min-width: 100px;
+    max-width: 170px;
+    border-radius: 4px;
+    cursor: pointer;
   }
 
   &__title {
@@ -143,7 +156,7 @@
 }
 
 .codex-editor--narrow .link-tool__image {
-  display: none;
+  /* display: none; */
 }
 
 @-webkit-keyframes progress {
