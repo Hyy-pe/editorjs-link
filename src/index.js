@@ -160,10 +160,13 @@ export default class LinkTool {
    * @param {LinkToolData} data
    */
   set data(data) {
-    this._data = Object.assign({}, {
-      link: data.link || this._data.link,
-      meta: data.meta || this._data.meta,
-    });
+    this._data = Object.assign(
+      {},
+      {
+        link: data.link || this._data.link,
+        meta: data.meta || this._data.meta,
+      }
+    );
   }
 
   /**
@@ -305,10 +308,10 @@ export default class LinkTool {
       rel: 'nofollow noindex noreferrer',
     });
 
-    this.nodes.linkImage = this.make('div', this.CSS.linkImage);
     this.nodes.linkTitle = this.make('div', this.CSS.linkTitle);
     this.nodes.linkDescription = this.make('p', this.CSS.linkDescription);
     this.nodes.linkText = this.make('span', this.CSS.linkText);
+    this.nodes.linkImage = this.make('div', this.CSS.linkImage);
 
     return holder;
   }
@@ -319,29 +322,32 @@ export default class LinkTool {
    * @param {metaData} meta - link meta data
    */
   showLinkPreview({ image, title, description }) {
+    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
+    this.nodes.linkContent.setAttribute('href', this.data.link);
     this.nodes.container.appendChild(this.nodes.linkContent);
+
+    const linkContentLeft = this.make('div', 'link-tool__content--left');
+
+    if (title) {
+      this.nodes.linkTitle.textContent = title;
+      linkContentLeft.appendChild(this.nodes.linkTitle);
+    }
+
+    if (description) {
+      this.nodes.linkDescription.textContent = description;
+      linkContentLeft.appendChild(this.nodes.linkDescription);
+    }
+
+    linkContentLeft.appendChild(this.nodes.linkText);
+    this.nodes.linkContent.appendChild(linkContentLeft);
 
     if (image && image.url) {
       this.nodes.linkImage.style.backgroundImage = 'url(' + image.url + ')';
       this.nodes.linkContent.appendChild(this.nodes.linkImage);
     }
 
-    if (title) {
-      this.nodes.linkTitle.textContent = title;
-      this.nodes.linkContent.appendChild(this.nodes.linkTitle);
-    }
-
-    if (description) {
-      this.nodes.linkDescription.textContent = description;
-      this.nodes.linkContent.appendChild(this.nodes.linkDescription);
-    }
-
-    this.nodes.linkContent.classList.add(this.CSS.linkContentRendered);
-    this.nodes.linkContent.setAttribute('href', this.data.link);
-    this.nodes.linkContent.appendChild(this.nodes.linkText);
-
     try {
-      this.nodes.linkText.textContent = (new URL(this.data.link)).hostname;
+      this.nodes.linkText.textContent = new URL(this.data.link).hostname;
     } catch (e) {
       this.nodes.linkText.textContent = this.data.link;
     }
@@ -384,17 +390,17 @@ export default class LinkTool {
     this.data = { link: url };
 
     try {
-      const { body } = await (ajax.get({
+      const { body } = await ajax.get({
         url: this.config.endpoint,
         headers: this.config.headers,
         data: {
           url,
         },
-      }));
+      });
 
       this.onFetch(body);
     } catch (error) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t fetch the link data'));
+      this.fetchingFailed(this.api.i18n.t("Couldn't fetch the link data"));
     }
   }
 
@@ -405,7 +411,9 @@ export default class LinkTool {
    */
   onFetch(response) {
     if (!response || !response.success) {
-      this.fetchingFailed(this.api.i18n.t('Couldn\'t get this link data, try the other one'));
+      this.fetchingFailed(
+        this.api.i18n.t("Couldn't get this link data, try the other one")
+      );
 
       return;
     }
@@ -420,7 +428,9 @@ export default class LinkTool {
     };
 
     if (!metaData) {
-      this.fetchingFailed(this.api.i18n.t('Wrong response format from the server'));
+      this.fetchingFailed(
+        this.api.i18n.t('Wrong response format from the server')
+      );
 
       return;
     }
